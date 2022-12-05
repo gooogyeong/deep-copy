@@ -5,8 +5,9 @@ class Human {
   isHuman = true
 }
 
-class Parent {
+class Parent extends Human {
   constructor(children) {
+    super()
     this.children = children
   }
   privateAge = 50
@@ -19,7 +20,6 @@ class Parent {
 }
 
 const parent = new Parent([{ name: 'Charles', age: 10 }, { name: 'James', age: 12 }, { name: 'Lina', age: 7 }])
-parent.__proto__ = new Human()
 const copiedParent = deepCopy(parent)
 
 test('should copy primitive value', () => {
@@ -33,27 +33,26 @@ test('should copy null', () => {
 
 test('should copy nested object', () => {
   expect(copiedParent).toEqual(parent)
-  // expect(_.cloneDeep(copiedParent)).toEqual(parent)
 })
 
 test('should copy __proto__ object', () => {
   expect(copiedParent.__proto__).toEqual(parent.__proto__)
-  // expect(_.cloneDeep(copiedParent).__proto__).toEqual(parent.__proto__)
 })
 
 test('should copy properties of __proto__ object', () => {
   expect(copiedParent.isHuman).toEqual(parent.isHuman)
-  // expect(_.cloneDeep(copiedParent).isHuman).toEqual(parent.isHuman)
+})
+
+test('should copy own property descriptors', () => {
+  expect(Object.getOwnPropertyDescriptors(copiedParent)).toEqual(Object.getOwnPropertyDescriptors(parent))
 })
 
 test('should copy getter', () => {
   expect(copiedParent.age).toEqual(parent.age)
-  // expect(_.cloneDeep(copiedParent).age).toEqual(parent.age)
 })
 
 test('should copy setter', () => {
   const newAge = 54
   copiedParent.age = newAge
   expect(copiedParent.age).toEqual(newAge)
-  // expect(_.cloneDeep(parent)).toEqual(newAge)
 })
