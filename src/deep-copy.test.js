@@ -6,14 +6,17 @@ class Human {
 }
 
 class Parent extends Human {
-  constructor(children) {
+  constructor (children) {
     super()
     this.children = children
   }
+
   privateAge = 50
+
   get age () {
     return this.privateAge
   }
+
   set age (age) {
     this.privateAge = age
   }
@@ -22,9 +25,14 @@ class Parent extends Human {
 const parent = new Parent([{ name: 'Charles', age: 10 }, { name: 'James', age: 12 }, { name: 'Lina', age: 7 }])
 const copiedParent = deepCopy(parent)
 
-test('should copy primitive value', () => {
+test('should copy string', () => {
   const str = 'abc'
   expect(deepCopy(str)).toEqual(str)
+})
+
+test('should copy number', () => {
+  const number = 2
+  expect(number).toEqual(deepCopy(number))
 })
 
 test('should copy null', () => {
@@ -55,4 +63,38 @@ test('should copy setter', () => {
   const newAge = 54
   copiedParent.age = newAge
   expect(copiedParent.age).toEqual(newAge)
+})
+
+test('should copy Map', () => {
+  const map = new Map([
+    ['name', 'Minkyung'],
+    [function () {}, 'function'],
+    ['a', {
+      a: 1,
+      b: 2,
+      c: ['x', 'y', 'z'],
+      d: { abc: 1 }
+    }]])
+  const copiedMap = deepCopy(map)
+  expect(map).toEqual(copiedMap)
+})
+
+test('should copy Set', () => {
+  const set = new Set([1, { a: 1, b: 2, c: ['x', 'y', 'z'], d: { abc: 1 } }, 3, 4])
+  const copiedSet = deepCopy(set)
+  expect(set).toEqual(copiedSet)
+})
+
+test('should copy Date', () => {
+  const date = new Date()
+  const copiedDate = deepCopy(date)
+  expect(date).toEqual(copiedDate)
+})
+
+test('should copy Promise', () => {
+  const promise = new Promise((resolve, reject) => {
+    setTimeout(() => { resolve('Done!')}, 1000)
+  })
+  const  copiedPromise = deepCopy(promise)
+  expect(promise).toEqual(copiedPromise)
 })
