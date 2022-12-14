@@ -92,9 +92,13 @@ test('should copy Date', () => {
 })
 
 test('should copy Promise', () => {
-  const promise = new Promise((resolve, reject) => {
-    setTimeout(() => { resolve('Done!')}, 1000)
-  })
+  const makePromise = function (number) {
+    return new Promise((resolve, reject) => {
+      if (number === 100) reject('Invalid Number')
+      else setTimeout(() => { resolve('Done!')}, 1000)
+    })
+  }
+  const promise = makePromise(1)
   const  copiedPromise = deepCopy(promise)
   expect(promise).toEqual(copiedPromise)
 })
